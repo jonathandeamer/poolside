@@ -16,7 +16,6 @@ window#waybar {
 #workspaces,
 #window,
 #clock,
-#pulseaudio,
 #network,
 #tray {
   margin: 4px 4px 3px;
@@ -69,7 +68,11 @@ window#waybar.empty #window {
 }
 
 #pulseaudio {
-  background: rgba(223, 214, 238, 0.72);
+  margin: 4px 2px 3px;
+  padding: 0 6px;
+  background: transparent;
+  border: none;
+  min-width: 0;
 }
 
 #network {

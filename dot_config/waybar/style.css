@@ -14,11 +14,10 @@ window#waybar {
 }
 
 #workspaces,
+#window,
 #clock,
 #pulseaudio,
 #network,
-#cpu,
-#memory,
 #tray {
   margin: 4px 4px 3px;
   padding: 0 10px;
@@ -55,20 +54,28 @@ window#waybar {
   border-color: rgba(201, 98, 68, 0.25);
 }
 
+#window {
+  max-width: 360px;
+  background: rgba(244, 224, 189, 0.72);
+  color: #23313a;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#window.empty {
+  background: transparent;
+  border-color: transparent;
+  padding-left: 0;
+  padding-right: 0;
+}
+
 #pulseaudio {
   background: rgba(223, 214, 238, 0.72);
 }
 
 #network {
   background: rgba(220, 232, 221, 0.78);
-}
-
-#cpu {
-  background: rgba(244, 224, 189, 0.78);
-}
-
-#memory {
-  background: rgba(233, 226, 248, 0.78);
 }
 
 #tray {

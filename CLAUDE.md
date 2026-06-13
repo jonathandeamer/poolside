@@ -82,3 +82,6 @@ Before public pushes or large dotfile imports, run `scripts/secret-scan.sh` and 
 Use Conventional Commits for this repo. The versioned commit hook enforces the allowed types and
 scopes documented in `docs/commits.md`, including scopes for Arch setup, ricing components, chezmoi,
 git workflow, public-safety work, and superpowers documentation.
+
+Do not add AI attribution metadata to commits. The hook rejects AI co-authors, AI/LLM/generated
+trailers, and footers such as "Generated with ..." or "Assisted by ..." that credit AI tools.

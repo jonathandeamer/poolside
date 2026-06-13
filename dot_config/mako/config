@@ -14,7 +14,7 @@ border-size=2
 border-radius=4
 
 # Colors & Font
-font=JetBrainsMono Nerd Font 10
+font=Inter, JetBrainsMono Nerd Font 10
 background-color=#f5f0e8f2
 text-color=#23313a
 border-color=#a8c4caee

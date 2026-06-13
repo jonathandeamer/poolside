@@ -1,0 +1,36 @@
+# Mako Configuration
+# David Hockney Tribute Aesthetic - Pool-house Palette
+
+max-visible=5
+sort=-time
+group-by=none
+
+# Geometry
+width=320
+height=110
+margin=12
+padding=12
+border-size=2
+border-radius=4
+
+# Colors & Font
+font=JetBrainsMono Nerd Font 10
+background-color=#f5f0e8f2
+text-color=#23313a
+border-color=#a8c4caee
+progress-color=#c96244ee
+
+# Default behavior
+default-timeout=8000
+markup=1
+actions=1
+
+# Low urgency style
+[urgency=low]
+border-color=#506c8188
+default-timeout=5000
+
+# High urgency style (uses the warm red-orange accent)
+[urgency=high]
+border-color=#c96244ee
+default-timeout=0

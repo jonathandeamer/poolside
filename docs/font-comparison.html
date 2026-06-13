@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hockney Tribute - Typography Comparison</title>
+  <!-- Google Fonts for the compared typefaces -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=Inter:wght@100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Jost:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-cream: #f5f0e8;
+      --bg-cream-light: #fdfbf7;
+      --text-charcoal: #23313a;
+      --accent-orange: #c96244;
+      --accent-blue: #ddecf4;
+      --accent-green: #dce8dd;
+      --border-slate: rgba(80, 108, 129, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-cream);
+      color: var(--text-charcoal);
+      font-family: 'Inter', sans-serif;
+      padding: 40px 20px;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 50px;
+      border-bottom: 2px solid var(--accent-orange);
+      padding-bottom: 20px;
+    }
+
+    h1 {
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      font-size: 2.5rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      opacity: 0.8;
+      font-style: italic;
+    }
+
+    /* Font Specimen Columns */
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    @media (min-width: 900px) {
+      .comparison-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .font-column {
+      background: var(--bg-cream-light);
+      border: 1px solid var(--border-slate);
+      border-radius: 6px;
+      padding: 30px 20px;
+      box-shadow: 0 4px 12px rgba(35, 49, 58, 0.04);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .font-column.current {
+      border: 2px dashed var(--accent-orange);
+      position: relative;
+    }
+
+    .font-column.current::before {
+      content: "CURRENT STATE";
+      position: absolute;
+      top: -12px;
+      left: 15px;
+      background: var(--accent-orange);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: bold;
+      padding: 2px 8px;
+      border-radius: 4px;
+      letter-spacing: 1px;
+    }
+
+    .font-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+      border-bottom: 1px solid var(--border-slate);
+      padding-bottom: 10px;
+    }
+
+    .font-desc {
+      font-size: 0.9rem;
+      opacity: 0.75;
+      margin-bottom: 25px;
+      min-height: 45px;
+    }
+
+    /* Mockups */
+    .mockup-label {
+      font-size: 0.75rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      opacity: 0.5;
+      margin-top: 20px;
+      margin-bottom: 8px;
+    }
+
+    /* 1. Waybar Mockup */
+    .mockup-waybar {
+      border: 1px solid rgba(201, 98, 68, 0.4);
+      border-radius: 4px;
+      padding: 6px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .wb-left, .wb-center, .wb-right {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .wb-module {
+      padding: 2px 6px;
+      border-radius: 3px;
+      border: 1px solid rgba(80, 108, 129, 0.1);
+      font-size: 11px;
+    }
+
+    .wb-workspaces {
+      letter-spacing: 2px;
+    }
+
+    /* 2. Mako Mockup */
+    .mockup-mako {
+      border-radius: 4px;
+      padding: 10px 12px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .mako-title {
+      font-weight: bold;
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    .mako-body {
+      font-size: 11px;
+      line-height: 1.3;
+    }
+
+    /* 3. Terminal Mockup */
+    .mockup-terminal {
+      background: #23313a;
+      color: #f5f0e8;
+      border-radius: 4px;
+      padding: 12px;
+      font-size: 11px;
+      flex-grow: 1;
+      min-height: 120px;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    .term-prompt {
+      color: var(--accent-orange);
+    }
+
+    /* Typography Sets */
+    /* Current: JetBrains Mono */
+    .font-jb {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .font-jb-ui {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .font-jb-term {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Direction A: Jost */
+    .font-a {
+      font-family: 'Jost', sans-serif;
+    }
+    .font-a-ui {
+      font-family: 'Jost', sans-serif;
+    }
+    .font-a-term {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Direction B: EB Garamond */
+    .font-b {
+      font-family: 'EB Garamond', serif;
+    }
+    .font-b-ui {
+      font-family: 'EB Garamond', serif;
+    }
+    .font-b-term {
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    /* Direction C: IBM Plex */
+    .font-c {
+      font-family: 'IBM Plex Sans', sans-serif;
+    }
+    .font-c-ui {
+      font-family: 'IBM Plex Sans', sans-serif;
+    }
+    .font-c-term {
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    /* Custom overrides for mockups based on fonts */
+    .font-jb .mockup-waybar { background: rgba(245, 240, 232, 0.95); }
+    .font-jb .wb-module { background: rgba(221, 236, 244, 0.7); }
+    .font-jb .mockup-mako { background: #fdfbf7; border: 2px solid #a8c4ca; }
+    
+    .font-a .mockup-waybar { background: rgba(245, 240, 232, 0.95); }
+    .font-a .wb-module { background: rgba(221, 236, 244, 0.7); font-weight: 500; }
+    .font-a .mockup-mako { background: #fdfbf7; border: 2px solid #506c81; }
+
+    .font-b .mockup-waybar { background: rgba(245, 240, 232, 0.95); }
+    .font-b .wb-module { background: rgba(245, 240, 232, 0.5); border: 1px solid rgba(80,108,129,0.2); }
+    .font-b .mockup-mako { background: #fdfbf7; border: 1px dashed #c96244; }
+
+    .font-c .mockup-waybar { background: rgba(245, 240, 232, 0.95); }
+    .font-c .wb-module { background: rgba(221, 236, 244, 0.75); border: 1px solid rgba(80,108,129,0.15); }
+    .font-c .mockup-mako { background: #fdfbf7; border: 2px solid #a8c4ca; }
+
+    .help-box {
+      margin-top: 50px;
+      background: var(--accent-blue);
+      border: 1px solid var(--border-slate);
+      border-radius: 6px;
+      padding: 20px;
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Hockney Tribute Rice</h1>
+      <p class="subtitle">Typography Comparison Specimen</p>
+    </header>
+
+    <div class="comparison-grid">
+      
+      <!-- Current State -->
+      <div class="font-column current font-jb">
+        <div class="font-title">JetBrains Mono</div>
+        <div class="font-desc">The default configuration. Heavy, developer-centric monospace font for all interfaces.</div>
+        
+        <div class="mockup-label">Waybar Preview</div>
+        <div class="mockup-waybar font-jb-ui">
+          <div class="wb-left">
+            <span class="wb-module wb-workspaces">○ ○ ● ○</span>
+            <span class="wb-module">terminal</span>
+          </div>
+          <div class="wb-center">
+            <span class="wb-module" style="background: rgba(238, 227, 213, 0.95); color: #7d3c31;">Sat 13 Jun 21:25</span>
+          </div>
+          <div class="wb-right">
+            <span class="wb-module">vol 80%</span>
+            <span class="wb-module">󰖩 online</span>
+          </div>
+        </div>
+
+        <div class="mockup-label">Mako Notification</div>
+        <div class="mockup-mako font-jb-ui">
+          <div class="mako-title">Hockney Tribute</div>
+          <div class="mako-body">This is a test notification. The text is monospace and rectangular.</div>
+        </div>
+
+        <div class="mockup-label">Kitty Terminal</div>
+        <div class="mockup-terminal font-jb-term">
+          <div><span class="term-prompt">~ $</span> neofetch</div>
+          <div style="color: #a8c4ca;">OS: Arch Linux ARM</div>
+          <div style="color: #a8c4ca;">Host: poolside-desktop</div>
+          <div><span class="term-prompt">~ $</span> echo "still water"</div>
+          <div>still water</div>
+        </div>
+      </div>
+
+      <!-- Direction A -->
+      <div class="font-column font-a">
+        <div class="font-title">Direction A: Jost</div>
+        <div class="font-desc">Geometric sans-serif. Architectural, clean, circular structures representing mid-century modern layouts.</div>
+        
+        <div class="mockup-label">Waybar Preview</div>
+        <div class="mockup-waybar font-a-ui">
+          <div class="wb-left">
+            <span class="wb-module wb-workspaces">○ ○ ● ○</span>
+            <span class="wb-module">terminal</span>
+          </div>
+          <div class="wb-center">
+            <span class="wb-module" style="background: rgba(238, 227, 213, 0.95); color: #7d3c31;">Sat 13 Jun 21:25</span>
+          </div>
+          <div class="wb-right">
+            <span class="wb-module">vol 80%</span>
+            <span class="wb-module">󰖩 online</span>
+          </div>
+        </div>
+
+        <div class="mockup-label">Mako Notification</div>
+        <div class="mockup-mako font-a-ui">
+          <div class="mako-title" style="font-size: 13px;">Hockney Tribute</div>
+          <div class="mako-body" style="font-size: 12px;">This is a test notification. Clean and crisp sans-serif geometry.</div>
+        </div>
+
+        <div class="mockup-label">Kitty Terminal (JetBrains Mono)</div>
+        <div class="mockup-terminal font-a-term">
+          <div><span class="term-prompt">~ $</span> neofetch</div>
+          <div style="color: #a8c4ca;">OS: Arch Linux ARM</div>
+          <div style="color: #a8c4ca;">Host: poolside-desktop</div>
+          <div><span class="term-prompt">~ $</span> echo "still water"</div>
+          <div>still water</div>
+        </div>
+      </div>
+
+      <!-- Direction B -->
+      <div class="font-column font-b">
+        <div class="font-title">Direction B: EB Garamond</div>
+        <div class="font-desc">Classical book serif. Elegant, literary, print-like curves representing catalogue cards and domestic libraries.</div>
+        
+        <div class="mockup-label">Waybar Preview</div>
+        <div class="mockup-waybar font-b-ui">
+          <div class="wb-left">
+            <span class="wb-module wb-workspaces" style="letter-spacing: 3px;">○ ○ ● ○</span>
+            <span class="wb-module" style="font-style: italic;">terminal</span>
+          </div>
+          <div class="wb-center">
+            <span class="wb-module" style="background: rgba(238, 227, 213, 0.95); color: #7d3c31; font-weight: bold;">Sat 13 Jun 21:25</span>
+          </div>
+          <div class="wb-right">
+            <span class="wb-module">vol 80%</span>
+            <span class="wb-module">󰖩 online</span>
+          </div>
+        </div>
+
+        <div class="mockup-label">Mako Notification</div>
+        <div class="mockup-mako font-b-ui">
+          <div class="mako-title" style="font-size: 14px;">Hockney Tribute</div>
+          <div class="mako-body" style="font-size: 13px;">This is a test notification. Elegant serif curves feel like a printed book.</div>
+        </div>
+
+        <div class="mockup-label">Kitty Terminal (IBM Plex Mono)</div>
+        <div class="mockup-terminal font-b-term">
+          <div><span class="term-prompt">~ $</span> neofetch</div>
+          <div style="color: #a8c4ca;">OS: Arch Linux ARM</div>
+          <div style="color: #a8c4ca;">Host: poolside-desktop</div>
+          <div><span class="term-prompt">~ $</span> echo "still water"</div>
+          <div>still water</div>
+        </div>
+      </div>
+
+      <!-- Direction C -->
+      <div class="font-column font-c">
+        <div class="font-title">Direction C: IBM Plex</div>
+        <div class="font-desc">Humanist sans & typewriter mono. Modernist, design-centric hybrid that feels structural yet warm and readable.</div>
+        
+        <div class="mockup-label">Waybar Preview</div>
+        <div class="mockup-waybar font-c-ui">
+          <div class="wb-left">
+            <span class="wb-module wb-workspaces">○ ○ ● ○</span>
+            <span class="wb-module">terminal</span>
+          </div>
+          <div class="wb-center">
+            <span class="wb-module" style="background: rgba(238, 227, 213, 0.95); color: #7d3c31; font-weight: 500;">Sat 13 Jun 21:25</span>
+          </div>
+          <div class="wb-right">
+            <span class="wb-module">vol 80%</span>
+            <span class="wb-module">󰖩 online</span>
+          </div>
+        </div>
+
+        <div class="mockup-label">Mako Notification</div>
+        <div class="mockup-mako font-c-ui">
+          <div class="mako-title" style="font-size: 13px;">Hockney Tribute</div>
+          <div class="mako-body" style="font-size: 11.5px;">This is a test notification. IBM Plex Sans brings excellent balance and proportions.</div>
+        </div>
+
+        <div class="mockup-label">Kitty Terminal (IBM Plex Mono)</div>
+        <div class="mockup-terminal font-c-term">
+          <div><span class="term-prompt">~ $</span> neofetch</div>
+          <div style="color: #a8c4ca;">OS: Arch Linux ARM</div>
+          <div style="color: #a8c4ca;">Host: poolside-desktop</div>
+          <div><span class="term-prompt">~ $</span> echo "still water"</div>
+          <div>still water</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="help-box">
+      <h3 style="margin-bottom: 8px;">How to view this comparison:</h3>
+      <p>This file has been created directly in your repository at <strong>docs/font-comparison.html</strong>.</p>
+      <p style="margin-top: 6px;">You can open it in any web browser to see the live typography rendering with active Google Fonts. For example, run:</p>
+      <code style="display: block; background: rgba(35, 49, 58, 0.1); padding: 8px; margin-top: 8px; border-radius: 4px;">
+        xdg-open docs/font-comparison.html
+      </code>
+    </div>
+  </div>
+</body>
+</html>

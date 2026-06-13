@@ -55,12 +55,8 @@ window#waybar {
 }
 
 #window {
-  max-width: 360px;
   background: rgba(244, 224, 189, 0.72);
   color: #23313a;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 #window.empty {

@@ -1,0 +1,10 @@
+CLAUDE.md
+AGENTS.md
+docs/**
+scripts/**
+.githooks/**
+.gitignore
+.chezmoiignore
+assets/**
+.DS_Store
+._*

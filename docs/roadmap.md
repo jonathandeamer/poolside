@@ -10,6 +10,7 @@ session to pick up without re-deriving the current state.
 - Waybar is installed, running, and styled in a warm pool-house direction.
 - The current Waybar layout is: workspaces, focused window title, clock, audio, network, tray.
 - Hyprland workspaces `1` through `10` are persistent.
+- Kitty is configured with a legible light-theme Hockney palette, 12px window padding, and 1.0 opacity.
 - The repo is managed through chezmoi and should stay public-safe.
 
 ## Immediate Next Work
@@ -29,9 +30,9 @@ session to pick up without re-deriving the current state.
    - Make the save path and clipboard behavior explicit.
    - Prefer a small helper script if the flow needs more than one command.
 
-4. Kitty
-   - Finish terminal colors, padding, and opacity.
-   - Keep the terminal legible in the same palette as the rest of the desktop.
+4. Kitty [Completed]
+   - Finished terminal colors, padding, and opacity.
+   - Kept the terminal legible in the same palette as the rest of the desktop.
 
 5. Session polish
    - Add lock/suspend/logout handling if it does not already exist.

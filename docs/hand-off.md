@@ -54,5 +54,4 @@ This file records the current desktop state and the things another agent should 
 - `mako` styling
 - `wofi` styling
 - screenshot workflow
-- terminal theme cleanup
 - lock/suspend/session shortcuts

@@ -54,7 +54,11 @@ Useful installed rice stack:
 
 ## Dotfiles workflow
 
-The intended source of truth is chezmoi backed by a GitHub remote.
+The source of truth is this chezmoi source repo backed by the public GitHub remote:
+
+- Local source: `/home/jonathan/rice`
+- Remote: `https://github.com/jonathandeamer/poolside`
+- Default branch: `main`
 
 - Prefer editing through chezmoi if the relevant file is already managed there.
 - Commit and push known-good dotfiles before risky experiments.

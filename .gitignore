@@ -1,0 +1,18 @@
+# Local filesystem metadata
+.DS_Store
+._*
+
+# Local scratch/assets not part of the dotfiles source
+assets/
+
+# Editor and tool noise
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Logs and temporary files
+*.log
+tmp/
+temp/

@@ -28,6 +28,11 @@ docs/
 CLAUDE.md
 ```
 
+For project direction and transfer notes, see:
+
+- `docs/roadmap.md`
+- `docs/hand-off.md`
+
 ## Track
 
 - Hyprland config

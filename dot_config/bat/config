@@ -1,0 +1,5 @@
+# bat config — dark theme closest to the poolside palette, with clean styling.
+--theme="Coldark-Dark"
+--style="numbers,changes,header"
+--italic-text=always
+--paging=auto

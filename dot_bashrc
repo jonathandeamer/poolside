@@ -5,8 +5,16 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-alias ls='ls --color=auto'
 alias grep='grep --color=auto'
+
+# eza (modern ls) with Nerd Font icons
+alias ls='eza --icons --group-directories-first'
+alias ll='eza --icons --group-directories-first -lh'
+alias la='eza --icons --group-directories-first -lah'
+alias lt='eza --icons --group-directories-first --tree --level=2'
+
+# bat (cat with syntax highlighting)
+alias cat='bat --paging=never'
 . /etc/profile.d/custom-bash-options.sh
 
 # >>> Codex installer >>>
@@ -14,3 +22,19 @@ export PATH="/home/jonathan/.local/bin:$PATH"
 # <<< Codex installer <<<
 
 eval "$(starship init bash)"
+
+# zoxide (smarter cd): `z <dir>` to jump, `zi` for interactive
+eval "$(zoxide init bash)"
+
+# fzf: key bindings (Ctrl-T files, Ctrl-R history, Alt-C cd) + completion
+eval "$(fzf --bash)"
+
+# fzf colors — poolside palette
+export FZF_DEFAULT_OPTS="
+  --height 40% --layout=reverse --border=rounded --info=inline
+  --color=fg:#e3ded6,fg+:#fcfaf6,bg+:#23313a,hl:#c96244,hl+:#d46a4e
+  --color=info:#5a9ec2,prompt:#c96244,pointer:#d46a4e,marker:#76a881
+  --color=spinner:#f6cb4f,header:#7c8e9a,border:#3d7590"
+
+# bat-powered man pages
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"

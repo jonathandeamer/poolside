@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+# Build ~/.local/share/icons/Papirus-Poolside: inherits Papirus, recolors
+# folder icons to the poolside teal variant. Idempotent / re-runnable.
+# Reversal: rm -rf ~/.local/share/icons/Papirus-Poolside
+set -euo pipefail
+
+COLOR="teal"
+SRC="/usr/share/icons/Papirus"
+DEST="$HOME/.local/share/icons/Papirus-Poolside"
+
+[ -d "$SRC" ] || { echo "Papirus not installed at $SRC" >&2; exit 1; }
+
+# Size dirs that actually ship a folder-<color>.svg (e.g. 24x24, 64x64).
+mapfile -t dirs < <(
+  find "$SRC" -type f -name "folder-${COLOR}.svg" -printf '%h\n' \
+    | sed -e "s#^$SRC/##" -e 's#/places$##' | sort -u
+)
+[ "${#dirs[@]}" -gt 0 ] || { echo "No folder-${COLOR}.svg in $SRC" >&2; exit 1; }
+
+rm -rf "$DEST"
+mkdir -p "$DEST"
+
+# index.theme
+{
+  echo "[Icon Theme]"
+  echo "Name=Papirus-Poolside"
+  echo "Comment=Papirus with poolside teal folders"
+  echo "Inherits=Papirus,Adwaita,hicolor"
+  printf "Directories="
+  printf "%s/places," "${dirs[@]}"; echo
+  echo
+  for size in "${dirs[@]}"; do
+    px=${size%%x*}
+    echo "[$size/places]"
+    echo "Size=$px"
+    echo "Type=Fixed"
+    echo "Context=Places"
+    echo
+  done
+} > "$DEST/index.theme"
+
+# Symlink recolored folders, stripping "-teal" from each name.
+for size in "${dirs[@]}"; do
+  s="$SRC/$size/places"
+  t="$DEST/$size/places"
+  mkdir -p "$t"
+  for src in "$s"/folder-${COLOR}*.svg; do
+    [ -e "$src" ] || continue
+    base=$(basename "$src")              # folder-teal-documents.svg
+    name="folder${base#folder-${COLOR}}" # folder-documents.svg / folder.svg
+    ln -sf "$src" "$t/$name"
+  done
+done
+
+gtk-update-icon-cache -f "$DEST" >/dev/null 2>&1 || true
+echo "Built $DEST (${#dirs[@]} size dirs, ${COLOR} folders)."

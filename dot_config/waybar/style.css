@@ -30,8 +30,8 @@ window#waybar {
 #workspaces {
   padding-left: 7px;
   padding-right: 7px;
-  background: rgba(252, 250, 246, 0.9);
-  border-color: rgba(212, 106, 78, 0.3);
+  background: #3d7590;
+  border: none;
 }
 
 #workspaces button {
@@ -39,7 +39,7 @@ window#waybar {
   padding: 0 3px;
   margin: 0 2px;
   background: transparent;
-  color: rgba(61, 117, 144, 0.8);
+  color: rgba(252, 250, 246, 0.6);
   border: 1px solid transparent;
   font-size: 11px;
 }
@@ -48,7 +48,6 @@ window#waybar {
   min-width: 18px;
   background: transparent;
   color: #d46a4e;
-  border-bottom: 2px solid rgba(212, 106, 78, 0.95);
 }
 
 #workspaces button:hover {

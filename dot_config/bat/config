@@ -1,5 +1,6 @@
-# bat config — dark theme closest to the poolside palette, with clean styling.
---theme="Coldark-Dark"
+# bat config — custom Poolside theme (see themes/Poolside.tmTheme).
+# After changing the theme file, rebuild bat's cache: `bat cache --build`.
+--theme="Poolside"
 --style="numbers,changes,header"
 --italic-text=always
 --paging=auto

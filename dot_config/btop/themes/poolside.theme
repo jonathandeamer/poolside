@@ -1,57 +1,59 @@
-# Poolside — "A Bigger Splash" palette for btop
-# Terracotta + pool blues + cream. Empty main_bg inherits the (transparent) terminal.
+# Poolside — "A Bigger Splash" palette for btop (light, cream background)
+# The kitty terminal is light (cream #fcfaf6 bg, dark #23313a fg). Empty main_bg +
+# theme_background=False lets btop inherit that cream background; colors below are
+# dark/saturated enough to read on cream.
 
 theme[main_bg]=""
-theme[main_fg]="#e3ded6"
-theme[title]="#fcfaf6"
-theme[hi_fg]="#d46a4e"
-theme[selected_bg]="#23313a"
-theme[selected_fg]="#d46a4e"
-theme[inactive_fg]="#7c8e9a"
-theme[graph_text]="#a8c4ca"
-theme[meter_bg]="#1c2830"
-theme[proc_misc]="#5a9ec2"
+theme[main_fg]="#23313a"
+theme[title]="#1c2830"
+theme[hi_fg]="#c25438"
+theme[selected_bg]="#ddecf4"
+theme[selected_fg]="#b04a30"
+theme[inactive_fg]="#97a6ac"
+theme[graph_text]="#6b7d88"
+theme[meter_bg]="#e3ded6"
+theme[proc_misc]="#3d7590"
 
 # Boxes
 theme[cpu_box]="#3d7590"
 theme[mem_box]="#2d808a"
 theme[net_box]="#8f5d88"
-theme[proc_box]="#c96244"
-theme[div_line]="#7c8e9a"
+theme[proc_box]="#c25438"
+theme[div_line]="#a8b4ba"
 
-# Temperature gradient: green -> yellow -> terracotta
-theme[temp_start]="#76a881"
-theme[temp_mid]="#f6cb4f"
-theme[temp_end]="#c96244"
+# Temperature gradient: green -> ochre -> terracotta
+theme[temp_start]="#5a8f66"
+theme[temp_mid]="#cf9a24"
+theme[temp_end]="#b04a30"
 
 # CPU gradient: blue -> teal -> terracotta (cool idle, warm under load)
-theme[cpu_start]="#3d7590"
-theme[cpu_mid]="#54b5c2"
-theme[cpu_end]="#d46a4e"
+theme[cpu_start]="#5a9ec2"
+theme[cpu_mid]="#2d808a"
+theme[cpu_end]="#b04a30"
 
 # Memory: free / cached / available / used
-theme[free_start]="#5a8f66"
-theme[free_mid]="#76a881"
-theme[free_end]="#a8c4ca"
-theme[cached_start]="#3d7590"
-theme[cached_mid]="#5a9ec2"
-theme[cached_end]="#ddecf4"
-theme[available_start]="#2d808a"
-theme[available_mid]="#54b5c2"
-theme[available_end]="#ddecf4"
-theme[used_start]="#f6cb4f"
-theme[used_mid]="#d46a4e"
-theme[used_end]="#c96244"
+theme[free_start]="#76a881"
+theme[free_mid]="#5a8f66"
+theme[free_end]="#4e7d5a"
+theme[cached_start]="#5a9ec2"
+theme[cached_mid]="#3d7590"
+theme[cached_end]="#2d4550"
+theme[available_start]="#54b5c2"
+theme[available_mid]="#2d808a"
+theme[available_end]="#2d4550"
+theme[used_start]="#cf9a24"
+theme[used_mid]="#c25438"
+theme[used_end]="#b04a30"
 
-# Network: download (blue) / upload (pink->purple)
-theme[download_start]="#3d7590"
-theme[download_mid]="#5a9ec2"
-theme[download_end]="#54b5c2"
+# Network: download (blue) / upload (pink->plum)
+theme[download_start]="#5a9ec2"
+theme[download_mid]="#3d7590"
+theme[download_end]="#2d4550"
 theme[upload_start]="#d99cb9"
 theme[upload_mid]="#8f5d88"
 theme[upload_end]="#7d3c31"
 
 # Process list gradient
 theme[process_start]="#5a9ec2"
-theme[process_mid]="#54b5c2"
-theme[process_end]="#76a881"
+theme[process_mid]="#2d808a"
+theme[process_end]="#4e7d5a"

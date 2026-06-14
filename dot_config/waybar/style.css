@@ -61,9 +61,11 @@ window#waybar {
 }
 
 #clock {
-  background: rgba(238, 227, 213, 0.9);
-  color: #7d3c31;
-  border-color: rgba(212, 106, 78, 0.28);
+  background: #c96244;
+  color: #fcfaf6;
+  border: none;
+  font-weight: 600;
+  letter-spacing: 0.3px;
 }
 
 #window {

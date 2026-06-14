@@ -1,0 +1,12 @@
+#!/bin/bash
+chosen=$(printf "Reboot\nShutdown" | wofi --dmenu \
+    --prompt "Power" \
+    --width 200 \
+    --lines 2 \
+    --hide-scroll \
+    --insensitive)
+
+case $chosen in
+    Reboot)   systemctl reboot ;;
+    Shutdown) systemctl poweroff ;;
+esac

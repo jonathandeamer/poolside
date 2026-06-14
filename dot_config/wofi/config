@@ -1,0 +1,13 @@
+width=560
+height=380
+location=center
+prompt=
+columns=1
+lines=9
+allow_images=true
+allow_markup=true
+insensitive=true
+hide_scroll=true
+filter_rate=100
+image_size=24
+gtk_dark=false

@@ -30,16 +30,28 @@ Builds on the GTK/icon/nemo theming already on this branch.
 
 `dot_local/bin/executable_fetch-hockney-paintings`
 
-- Source: `https://www.hockney.com/works/paintings/<decade>` index pages. The
-  gallery images use direct URLs of the form
-  `https://www.hockney.com/img/gallery/paintings/<decade>/<code>.jpg`.
+- Source: `https://www.hockney.com/works/paintings/<decade>` index pages. Decade
+  slugs (confirmed): `50s 60s 70s 80s 90s 00s 10s 82-portraits`.
+- Each painting is a fancybox anchor on the decade page carrying BOTH the image
+  and its title, e.g.:
+  `<a data-fancybox="group" data-type="image"
+   data-caption="<b>A Bigger Splash  </b> &nbsp;1967 - acrylic on canvas 96x96 in. "
+   href="https://www.hockney.com/img/gallery/paintings/60s/67B01.jpg">`
+  So **one request per decade** yields image URL + title + year — no per-painting
+  detail-page fetches needed.
 - Behaviour:
-  - Iterate the decade slugs linked from the paintings landing page
-    (50s,60s,70s,80s,90s,2000s,2010s + the "82 Portraits" set); exact slugs
-    confirmed at implementation time by fetching the landing page.
-  - For each decade page, extract unique `img/gallery/paintings/...jpg` URLs.
-  - Download to `~/paintings/<decade>-<code>.jpg`, **skipping files that already
-    exist** (idempotent).
+  - For each decade page, parse the anchors with Python's stdlib `html.parser`
+    (NOT a regex — `data-caption` contains embedded `<b>…</b>` markup that breaks
+    naïve `[^>]*` matching). For each anchor collect `href` (the
+    `img/gallery/paintings/...jpg` URL) and `data-caption`.
+  - Derive the filename from the caption: strip the `<b>`/`</b>` tags and
+    `&nbsp;`, take the title (before the year) and the 4-digit year, then emit
+    `<year>-<kebab-title>.jpg` — e.g. `1967-a-bigger-splash.jpg`,
+    `1968-christopher-isherwood-and-don-bachardy.jpg`. This matches the existing
+    `assets/hockney/` naming. Fall back to the URL code (`<decade>-<code>.jpg`)
+    only if a caption can't be parsed.
+  - Download to `~/paintings/`, **skipping files that already exist**
+    (idempotent).
   - Be polite: real `User-Agent`, `curl --limit-rate`, `--max-time` per file,
     a short `sleep` between requests, continue past individual failures.
   - Print a summary (downloaded / skipped / failed counts).

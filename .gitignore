@@ -4,6 +4,8 @@
 
 # Local scratch/assets not part of the dotfiles source
 assets/
+# Showcase capture output — local screenshot artifacts, not dotfiles source
+screenshots/
 
 # Editor and tool noise
 *.swp

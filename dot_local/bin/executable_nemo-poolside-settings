@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Apply a minimal-but-identifiable nemo layout for the poolside rice and a
+# clean screenshot. MUTATES LIVE DCONF (desktop state), not just repo files.
+# Reversal:
+#   dconf reset -f /org/nemo/
+#   gsettings reset-recursively org.gnome.desktop.interface  # if desired
+# Idempotent / re-runnable.
+set -euo pipefail
+
+# --- minimal chrome: drop menubar + statusbar, keep path bar + sidebar ---
+gsettings set org.nemo.window-state start-with-menu-bar false
+gsettings set org.nemo.window-state start-with-status-bar false
+gsettings set org.nemo.window-state start-with-sidebar false
+gsettings set org.nemo.preferences show-location-entry false      # breadcrumb path
+
+# --- clean view for a screenshot ---
+gsettings set org.nemo.preferences default-folder-viewer 'icon-view'
+gsettings set org.nemo.icon-view default-zoom-level 'large'
+gsettings set org.nemo.preferences show-hidden-files false
+gsettings set org.nemo.preferences show-image-thumbnails 'always'
+gsettings set org.nemo.preferences tooltips-show-path false
+
+# --- make nemo pick up the rice toolkit theme ---
+gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Poolside'
+gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita'
+gsettings set org.gnome.desktop.interface font-name 'Inter 11'
+gsettings set org.gnome.desktop.interface cursor-theme 'capitaine-cursors-light'
+
+echo "Applied poolside nemo settings (dconf mutated)."

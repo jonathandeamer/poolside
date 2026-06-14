@@ -1,51 +1,53 @@
 #!/usr/bin/env bash
 #
-# rice-showcase — summon (or dismiss) a fixed floating window composition over the
-# wallpaper for "desktop showcase" screenshots. Positions/sizes live as windowrules
-# in hyprland.conf, keyed on the kitty --class names below, so the scene is identical
-# every time. Toggle with Alt+Shift+S.
+# rice-showcase — stage two floating "desktop showcase" scenes over the
+# wallpaper and screenshot them. Sizes/positions live as windowrules in
+# hyprland.conf so each scene is identical every time. Toggle with Alt+Shift+S.
 #
-# Panes: rice_fetch (fastfetch), rice_weather (poolside forecast), and rice_cava (cava
-# if installed, otherwise a colourful eza listing as a placeholder).
+#   Scene A "system"  (workspace 2): rice_fetch (fastfetch) + rice_cava (cava,
+#                                    or an eza listing if cava is missing).
+#   Scene B "gallery" (workspace 3): nemo at ~/paintings — a Hockney gallery
+#                                    wall (populated by fetch-hockney-paintings).
+#
+# `shot` captures one PNG per scene so neither buries the wallpaper.
 #
 set -euo pipefail
 
-CLASSES=(rice_fetch rice_weather rice_cava)
 KENV=(env LIBGL_ALWAYS_SOFTWARE=1 kitty)
-# Workspace to stage the scene on, so only the wallpaper + the floating
-# composition show. Override with RICE_SHOWCASE_WS. The panes are also pinned to
-# this workspace via `windowrule = workspace 2` in hyprland.conf — keep them in sync.
-SHOW_WS="${RICE_SHOWCASE_WS:-2}"
+SYSTEM_WS="${RICE_SHOWCASE_WS:-2}"
+GALLERY_WS=3
+GALLERY_DIR="$HOME/paintings"
 STATE="${XDG_RUNTIME_DIR:-/tmp}/rice-showcase.ws"
 
+# Addresses of every window belonging to the showcase: the rice_ kitty panes
+# plus the gallery nemo (class nemo, title paintings).
+show_addresses() {
+    hyprctl clients -j 2>/dev/null | python3 -c 'import json,sys
+for c in json.load(sys.stdin):
+    cls=c.get("class","")
+    if cls.startswith("rice_") or (cls=="nemo" and c.get("title")=="paintings"):
+        print(c["address"])'
+}
+
 scene_is_up() {
-    hyprctl clients -j 2>/dev/null | grep -q '"class": "rice_'
+    [ -n "$(show_addresses)" ]
 }
 
 launch_pane() {
     setsid -f "${KENV[@]}" "$@" >/dev/null 2>&1
 }
 
-rice_addresses() {
-    hyprctl clients -j 2>/dev/null | python3 -c 'import json,sys
-for c in json.load(sys.stdin):
-    if c.get("class","").startswith("rice_"): print(c["address"])'
-}
-
 dismiss() {
-    # Close every rice_ window (not just the current CLASSES), so changing the pane
-    # set never strands an old pane that would fool scene_is_up. Enumerate by address
-    # and close each one — closing by a shared class regex can resolve every rapid
-    # dispatch to the same window before any actually closes, leaving others behind.
+    # Close every showcase window by address (closing by shared class can resolve
+    # repeated dispatches to the same window, stranding others).
     for _ in $(seq 1 10); do
-        mapfile -t addrs < <(rice_addresses)
+        mapfile -t addrs < <(show_addresses)
         [ "${#addrs[@]}" -eq 0 ] && break
         for a in "${addrs[@]}"; do
             hyprctl dispatch closewindow "address:$a" >/dev/null 2>&1 || true
         done
         sleep 0.3
     done
-    # Return to whatever workspace we came from.
     if [ -f "$STATE" ]; then
         prev="$(cat "$STATE" 2>/dev/null || true)"
         [ -n "$prev" ] && hyprctl dispatch workspace "$prev" >/dev/null 2>&1 || true
@@ -54,39 +56,49 @@ dismiss() {
 }
 
 summon() {
-    # Remember the current workspace, then stage on the empty showcase workspace.
+    # Remember the current workspace; windowrules pin each pane to its own
+    # workspace, so launch order / active workspace don't matter.
     hyprctl activeworkspace -j 2>/dev/null \
         | grep -oE '"id": *-?[0-9]+' | head -1 | grep -oE '\-?[0-9]+' > "$STATE" || true
-    hyprctl dispatch workspace "$SHOW_WS" >/dev/null 2>&1 || true
+    hyprctl dispatch workspace "$SYSTEM_WS" >/dev/null 2>&1 || true
 
+    # Scene A — system
     launch_pane --class rice_fetch --title fastfetch bash -lc 'fastfetch; tail -f /dev/null'
-    launch_pane --class rice_weather --title weather bash -lc '~/.local/bin/rice-weather; tail -f /dev/null'
-
     if command -v cava >/dev/null 2>&1; then
         launch_pane --class rice_cava --title cava bash -lc 'cava || true; tail -f /dev/null'
     else
         launch_pane --hold --class rice_cava \
             bash -lc 'eza -la --icons --git ~/rice 2>/dev/null; echo; echo "  (install cava for an audio visualiser in this pane)"'
     fi
+
+    # Scene B — gallery (nemo pinned to GALLERY_WS by windowrule)
+    if [ -d "$GALLERY_DIR" ] && [ -n "$(ls -A "$GALLERY_DIR" 2>/dev/null)" ]; then
+        setsid -f nemo "$GALLERY_DIR" >/dev/null 2>&1
+    else
+        echo "note: $GALLERY_DIR is empty — run fetch-hockney-paintings first" >&2
+    fi
 }
 
-# Summon the scene, get cava singing with a test tone, then capture a screenshot.
-# cava only reacts to live audio, so without the tone the visualiser pane is empty.
+# Capture both scenes. cava only reacts to live audio, so play the test tone
+# before grabbing the system scene.
 shot() {
-    local out="${1:-$HOME/rice/screenshots/showcase-$(date +%Y%m%d-%H%M%S).png}"
-    mkdir -p "$(dirname "$out")"
+    local base="${1:-$HOME/rice/screenshots/showcase-$(date +%Y%m%d-%H%M%S)}"
+    mkdir -p "$(dirname "$base")"
     scene_is_up || { summon; sleep 2; }
+
     if [ -x "$HOME/.local/bin/cava-tone" ]; then
         setsid -f "$HOME/.local/bin/cava-tone" 20 >/dev/null 2>&1 || true
-        # cava-tone synthesises the WAV (a slow Python loop) before playback starts,
-        # so wait for pw-play to actually begin, then give cava a beat to react.
         for _ in $(seq 1 20); do pgrep -x pw-play >/dev/null && break; sleep 0.5; done
         sleep 2
     fi
-    # Make sure the showcase workspace is the one actually on screen before capturing.
-    hyprctl dispatch workspace "$SHOW_WS" >/dev/null 2>&1 || true
-    sleep 0.5
-    command -v grim >/dev/null 2>&1 && grim "$out" && echo "saved $out"
+
+    hyprctl dispatch workspace "$SYSTEM_WS" >/dev/null 2>&1 || true
+    sleep 0.6
+    command -v grim >/dev/null 2>&1 && grim "${base}-system.png" && echo "saved ${base}-system.png"
+
+    hyprctl dispatch workspace "$GALLERY_WS" >/dev/null 2>&1 || true
+    sleep 1.5   # let nemo render thumbnails
+    command -v grim >/dev/null 2>&1 && grim "${base}-gallery.png" && echo "saved ${base}-gallery.png"
 }
 
 case "${1:-toggle}" in
@@ -94,5 +106,5 @@ case "${1:-toggle}" in
     down|reset|off) dismiss ;;
     shot|capture)   shift; shot "${1:-}" ;;
     toggle|"")      if scene_is_up; then dismiss; else summon; fi ;;
-    *) echo "usage: rice-showcase [toggle|up|down|shot [path]]" >&2; exit 2 ;;
+    *) echo "usage: rice-showcase [toggle|up|down|shot [base-path]]" >&2; exit 2 ;;
 esac

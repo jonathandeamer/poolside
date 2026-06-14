@@ -1,0 +1,94 @@
+#!/usr/bin/env python3
+"""Download David Hockney paintings from hockney.com into ~/paintings.
+
+LOCAL-ONLY: copyrighted reproductions kept for personal/local desktop use
+(a gallery wall in the rice showcase). Never committed to the repo.
+Idempotent / re-runnable (skips files already present).
+Reversal: rm -rf ~/paintings
+"""
+import html.parser, os, re, subprocess, sys, time, urllib.request
+
+BASE = "https://www.hockney.com"
+DECADES = ["50s", "60s", "70s", "80s", "90s", "00s", "10s", "82-portraits"]
+DEST = os.path.expanduser("~/paintings")
+UA = "Mozilla/5.0 (X11; Linux) rice-showcase/1.0 (personal use)"
+RATE_SLEEP = 0.7  # polite gap between downloads
+
+
+class GalleryParser(html.parser.HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.items = []  # (href, caption)
+
+    def handle_starttag(self, tag, attrs):
+        if tag != "a":
+            return
+        d = dict(attrs)
+        href = d.get("href", "") or ""
+        cap = d.get("data-caption", "") or ""
+        if "img/gallery/paintings/" in href and href.endswith(".jpg"):
+            self.items.append((href, cap))
+
+
+def fetch(url):
+    req = urllib.request.Request(url, headers={"User-Agent": UA})
+    with urllib.request.urlopen(req, timeout=20) as r:
+        return r.read().decode("utf-8", "replace")
+
+
+def slugify(cap, href):
+    text = re.sub(r"<[^>]+>", " ", cap).replace("\xa0", " ").replace("&nbsp;", " ")
+    m = re.search(r"\b(18|19|20)\d{2}\b", text)
+    year = m.group(0) if m else ""
+    title = text[:m.start()] if m else text
+    title = re.sub(r"[^A-Za-z0-9]+", "-", title).strip("-").lower()
+    if year and title:
+        return f"{year}-{title}.jpg"
+    code = href.rsplit("/", 1)[-1].rsplit(".", 1)[0]
+    dec = href.rsplit("/", 2)[-2]
+    return f"{dec}-{code}.jpg"
+
+
+def main():
+    os.makedirs(DEST, exist_ok=True)
+    seen = set()
+    got = skip = fail = 0
+    for dec in DECADES:
+        url = f"{BASE}/works/paintings/{dec}"
+        try:
+            page = fetch(url)
+        except Exception as e:  # noqa: BLE001 - keep going past a bad decade
+            print(f"  ! decade {dec}: {e}", file=sys.stderr)
+            continue
+        p = GalleryParser()
+        p.feed(page)
+        print(f"{dec}: {len(p.items)} works")
+        for href, cap in p.items:
+            if not href.startswith("http"):
+                href = BASE + "/" + href.lstrip("/")
+            if href in seen:
+                continue
+            seen.add(href)
+            name = slugify(cap, href)
+            out = os.path.join(DEST, name)
+            if os.path.exists(out) and os.path.getsize(out) > 0:
+                skip += 1
+                continue
+            rc = subprocess.run(
+                ["curl", "-fsS", "--max-time", "30", "--limit-rate", "2M",
+                 "-A", UA, "-o", out, href]
+            ).returncode
+            if rc == 0 and os.path.exists(out) and os.path.getsize(out) > 0:
+                got += 1
+                print(f"  + {name}")
+            else:
+                fail += 1
+                if os.path.exists(out):
+                    os.remove(out)
+                print(f"  ! failed {name}", file=sys.stderr)
+            time.sleep(RATE_SLEEP)
+    print(f"\nDone. downloaded={got} skipped={skip} failed={fail} dir={DEST}")
+
+
+if __name__ == "__main__":
+    main()

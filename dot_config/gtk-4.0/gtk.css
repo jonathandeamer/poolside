@@ -241,39 +241,29 @@ scrollbar slider:hover {
     background-color: @poolside_terracotta;
 }
 
-/* ---- nemo: keep its own chrome on the poolside palette ---- */
-.nemo-window,
-.nemo-window .view,
-.nemo-window notebook,
-.nemo-window stack {
+/* ---- GTK4-specific view widgets (file chooser portal) ---- */
+gridview child,
+listview row,
+columnview row {
     background-color: @poolside_bg;
     color: @poolside_fg;
+    border-radius: 4px;
 }
 
-/* navigation / location toolbar */
-.nemo-window .primary-toolbar,
-.nemo-window toolbar {
-    background-image: linear-gradient(to bottom, #fffdf9, @poolside_panel);
-    border-bottom: 1px solid alpha(@poolside_terracotta, 0.28);
-}
-
-/* the "cluebar" info strip nemo shows for trash/locations */
-.nemo-cluebar,
-.nemo-cluebar label {
-    background-color: alpha(@poolside_yellow, 0.22);
-    color: @poolside_fg;
-}
-
-/* places sidebar (nemo uses its own class alongside .sidebar) */
-.nemo-places-sidebar,
-.nemo-places-sidebar.view {
-    background-image: linear-gradient(to bottom, @poolside_panel, @poolside_panel_deep);
-}
-
-/* selected file row/icon → pool blue, matching the rest of the rice */
-.nemo-window .view:selected,
-.nemo-window iconview:selected,
-.nemo-window treeview:selected {
+gridview child:selected,
+listview row:selected,
+columnview row:selected {
     background-color: @poolside_blue;
     color: @poolside_bg;
+}
+
+gridview child:hover,
+listview row:hover,
+columnview row:hover {
+    background-color: alpha(@poolside_yellow, 0.20);
+}
+
+/* GTK4 split headerbars in the file chooser */
+windowhandle > headerbar {
+    background-image: linear-gradient(to bottom, #fffdf9, @poolside_panel);
 }

@@ -34,8 +34,12 @@ Useful installed rice stack:
 - PipeWire audio packages
 - `btop` (themed system monitor), `eza`, `bat`, `fzf`, `zoxide` (shell tooling)
 - `cava` (audio visualiser), `ncspot` (Spotify TUI) — music/visualiser stack
-- Waybar sound uses the native `wireplumber` module; `pipewire-pulse` is intentionally
-  not installed (no PulseAudio compatibility layer)
+- Waybar sound uses the native `wireplumber` module. `pipewire-pulse` is installed because
+  the repo `ncspot` (0.12.0) is built with a PulseAudio-only audio backend and fails with
+  "Connection refused (os error 111)" without a Pulse socket.
+- `ncspot` 0.12.0 (repo) only offers the deprecated username/password login. Auth is done by
+  dropping a librespot `credentials.json` (a reusable OAuth blob, e.g. copied from another
+  machine) into `~/.cache/ncspot/librespot/` — keep that file out of the repo; it is a secret.
 
 ## Operating rules
 

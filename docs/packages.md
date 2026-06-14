@@ -19,6 +19,8 @@ system state.
 - `hyprpolkitagent`
 - `mesa`
 - `ttf-jetbrains-mono-nerd`
+- `papirus-icon-theme` (icon set for GTK apps; teal-folder variant via the
+  `papirus-poolside-folders` script)
 - PipeWire audio packages
 
 ## Recommended repo tooling

@@ -32,6 +32,7 @@ Useful installed rice stack:
 - `mesa`
 - `ttf-jetbrains-mono-nerd`
 - PipeWire audio packages
+- `btop` (themed system monitor), `eza`, `bat`, `fzf`, `zoxide` (shell tooling)
 
 ## Operating rules
 
@@ -51,6 +52,22 @@ Useful installed rice stack:
 - Existing convention: `$mainMod` is `ALT`. Keep that unless the user asks to change keybinding
   philosophy.
 - Hyprland reference: https://wiki.hypr.land/
+
+## Theming
+
+- The rice uses a single "A Bigger Splash" / poolside palette across configs: terracotta
+  (`#c96244`/`#d46a4e`), pool blues (`#3d7590`/`#5a9ec2`/`#2d808a`), greens (`#5a8f66`/`#76a881`),
+  ochre (`#cf9a24`/`#f6cb4f`), plum (`#8f5d88`), and cream (`#fcfaf6`/`#e3ded6`).
+- The terminal (kitty) currently runs the **light** theme: cream `#fcfaf6` background, dark `#23313a`
+  foreground. A commented-out dark option exists in the kitty config. When theming terminal apps,
+  target a light/cream background (dark ink, deeper/saturated accents) — light-foreground themes
+  render unreadably light-on-cream.
+- `bat` uses a custom theme at `dot_config/bat/themes/Poolside.tmTheme`. Custom bat themes are
+  compiled into a cache, so after editing the theme file you must run `bat cache --build` for changes
+  to show.
+- `btop` uses a custom theme at `dot_config/btop/themes/poolside.theme`, selected via
+  `color_theme` in `dot_config/btop/btop.conf` with `theme_background = False` so it inherits the
+  terminal background.
 
 ## Dotfiles workflow
 

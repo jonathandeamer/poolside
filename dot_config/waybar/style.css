@@ -18,7 +18,6 @@ window#waybar {
 #workspaces,
 #window,
 #clock,
-#network,
 #tray {
   margin: 5px 4px 4px;
   padding: 0 10px;
@@ -82,47 +81,9 @@ window#waybar.empty #window {
   opacity: 0;
 }
 
-/* Control center: a sliders glyph that reveals sound + wifi on hover. */
-#custom-control {
-  margin: 5px 4px 4px;
-  padding: 0 11px;
-  background: rgba(245, 240, 232, 0.78);
-  border: 1px solid rgba(201, 98, 68, 0.2);
-  color: #3d7590;
-  font-size: 15px;
-  box-shadow: 2px 2px 0 rgba(35, 49, 58, 0.18);
-}
-
-#custom-control:hover {
-  background: rgba(201, 98, 68, 0.95);
-  color: #f8f1e6;
-  border-color: rgba(201, 98, 68, 0.25);
-}
-
-/* Revealed control items share one flat pool-blue panel. */
-#group-control #wireplumber,
-#group-control #network {
-  margin: 5px 2px 4px;
-  padding: 0 10px;
-  background: rgba(245, 240, 232, 0.78);
-  border: 1px solid rgba(201, 98, 68, 0.2);
-  color: #23313a;
-  min-width: 0;
-  box-shadow: 2px 2px 0 rgba(35, 49, 58, 0.18);
-}
-
-#group-control #network {
-  margin-right: 4px;
-}
-
 #tray {
   margin: 5px 4px 4px;
   padding: 0 12px 0 10px;
   background: rgba(245, 240, 232, 0.78);
   border: 1px solid rgba(201, 98, 68, 0.2);
-}
-
-#wireplumber.muted,
-#network.disconnected {
-  opacity: 0.6;
 }

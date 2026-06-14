@@ -8,22 +8,7 @@
   "margin-right": 8,
   "modules-left": ["hyprland/workspaces", "hyprland/window"],
   "modules-center": ["clock"],
-  "modules-right": ["group/control", "tray"],
-
-  "group/control": {
-    "orientation": "inherit",
-    "drawer": {
-      "transition-duration": 350,
-      "transition-left-to-right": false,
-      "click-to-reveal": false
-    },
-    "modules": ["custom/control", "wireplumber", "network"]
-  },
-
-  "custom/control": {
-    "format": "󰒓",
-    "tooltip": false
-  },
+  "modules-right": ["tray"],
 
   "hyprland/workspaces": {
     "disable-scroll": true,
@@ -50,24 +35,6 @@
       "weeks-pos": "left",
       "on-scroll": 1
     }
-  },
-
-  "wireplumber": {
-    "format": "󰕾 {volume}%",
-    "format-muted": "󰝟 muted",
-    "scroll-step": 5,
-    "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
-    "max-volume": 150,
-    "tooltip": false
-  },
-
-  "network": {
-    "format-wifi": "󰖩 {signalStrength}%",
-    "format-ethernet": "󰈀 {ipaddr}",
-    "format-linked": "󰈀 linked",
-    "format-disconnected": "󰖪 offline",
-    "tooltip-format-wifi": "{essid}\n{ipaddr}",
-    "tooltip-format-ethernet": "{ifname}\n{ipaddr}"
   },
 
   "tray": {

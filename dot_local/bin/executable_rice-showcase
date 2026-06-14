@@ -5,29 +5,45 @@
 # in hyprland.conf, keyed on the kitty --class names below, so the scene is identical
 # every time. Toggle with Alt+Shift+S.
 #
-# Panes: rice_fetch (fastfetch), rice_files (Nemo if installed), rice_btop (btop),
-# rice_cava (cava if installed, otherwise a colourful eza listing as a placeholder).
+# Panes: rice_fetch (fastfetch), rice_weather (poolside forecast), and rice_cava (cava
+# if installed, otherwise a colourful eza listing as a placeholder).
 #
 set -euo pipefail
 
-CLASSES=(rice_fetch rice_files rice_btop rice_cava)
+CLASSES=(rice_fetch rice_weather rice_cava)
 KENV=(env LIBGL_ALWAYS_SOFTWARE=1 kitty)
-# Empty workspace to stage the scene on, so only the wallpaper + the floating
-# composition show. Override with RICE_SHOWCASE_WS. Persistent workspaces are 1-3.
-SHOW_WS="${RICE_SHOWCASE_WS:-9}"
+# Workspace to stage the scene on, so only the wallpaper + the floating
+# composition show. Override with RICE_SHOWCASE_WS. The panes are also pinned to
+# this workspace via `windowrule = workspace 2` in hyprland.conf — keep them in sync.
+SHOW_WS="${RICE_SHOWCASE_WS:-2}"
 STATE="${XDG_RUNTIME_DIR:-/tmp}/rice-showcase.ws"
 
 scene_is_up() {
     hyprctl clients -j 2>/dev/null | grep -q '"class": "rice_'
 }
 
+launch_pane() {
+    setsid -f "${KENV[@]}" "$@" >/dev/null 2>&1
+}
+
+rice_addresses() {
+    hyprctl clients -j 2>/dev/null | python3 -c 'import json,sys
+for c in json.load(sys.stdin):
+    if c.get("class","").startswith("rice_"): print(c["address"])'
+}
+
 dismiss() {
-    # closewindow acts on one match at a time; loop until the class is gone.
-    for c in "${CLASSES[@]}"; do
-        for _ in 1 2 3 4 5; do
-            hyprctl clients -j 2>/dev/null | grep -q "\"class\": \"$c\"" || break
-            hyprctl dispatch closewindow "class:^${c}$" >/dev/null 2>&1 || true
+    # Close every rice_ window (not just the current CLASSES), so changing the pane
+    # set never strands an old pane that would fool scene_is_up. Enumerate by address
+    # and close each one — closing by a shared class regex can resolve every rapid
+    # dispatch to the same window before any actually closes, leaving others behind.
+    for _ in $(seq 1 10); do
+        mapfile -t addrs < <(rice_addresses)
+        [ "${#addrs[@]}" -eq 0 ] && break
+        for a in "${addrs[@]}"; do
+            hyprctl dispatch closewindow "address:$a" >/dev/null 2>&1 || true
         done
+        sleep 0.3
     done
     # Return to whatever workspace we came from.
     if [ -f "$STATE" ]; then
@@ -43,25 +59,40 @@ summon() {
         | grep -oE '"id": *-?[0-9]+' | head -1 | grep -oE '\-?[0-9]+' > "$STATE" || true
     hyprctl dispatch workspace "$SHOW_WS" >/dev/null 2>&1 || true
 
-    "${KENV[@]}" --hold --class rice_fetch fastfetch &
-
-    if command -v nemo >/dev/null 2>&1; then
-        nemo --no-desktop --class=rice_files "$HOME/rice" &
-    fi
-
-    "${KENV[@]}" --class rice_btop btop &
+    launch_pane --class rice_fetch --title fastfetch bash -lc 'fastfetch; tail -f /dev/null'
+    launch_pane --class rice_weather --title weather bash -lc '~/.local/bin/rice-weather; tail -f /dev/null'
 
     if command -v cava >/dev/null 2>&1; then
-        "${KENV[@]}" --class rice_cava cava &
+        launch_pane --class rice_cava --title cava bash -lc 'cava || true; tail -f /dev/null'
     else
-        "${KENV[@]}" --hold --class rice_cava \
-            bash -lc 'eza -la --icons --git ~/rice 2>/dev/null; echo; echo "  (install cava for an audio visualiser in this pane)"' &
+        launch_pane --hold --class rice_cava \
+            bash -lc 'eza -la --icons --git ~/rice 2>/dev/null; echo; echo "  (install cava for an audio visualiser in this pane)"'
     fi
+}
+
+# Summon the scene, get cava singing with a test tone, then capture a screenshot.
+# cava only reacts to live audio, so without the tone the visualiser pane is empty.
+shot() {
+    local out="${1:-$HOME/rice/screenshots/showcase-$(date +%Y%m%d-%H%M%S).png}"
+    mkdir -p "$(dirname "$out")"
+    scene_is_up || { summon; sleep 2; }
+    if [ -x "$HOME/.local/bin/cava-tone" ]; then
+        setsid -f "$HOME/.local/bin/cava-tone" 20 >/dev/null 2>&1 || true
+        # cava-tone synthesises the WAV (a slow Python loop) before playback starts,
+        # so wait for pw-play to actually begin, then give cava a beat to react.
+        for _ in $(seq 1 20); do pgrep -x pw-play >/dev/null && break; sleep 0.5; done
+        sleep 2
+    fi
+    # Make sure the showcase workspace is the one actually on screen before capturing.
+    hyprctl dispatch workspace "$SHOW_WS" >/dev/null 2>&1 || true
+    sleep 0.5
+    command -v grim >/dev/null 2>&1 && grim "$out" && echo "saved $out"
 }
 
 case "${1:-toggle}" in
     up|summon|on)   summon ;;
     down|reset|off) dismiss ;;
+    shot|capture)   shift; shot "${1:-}" ;;
     toggle|"")      if scene_is_up; then dismiss; else summon; fi ;;
-    *) echo "usage: rice-showcase [toggle|up|down]" >&2; exit 2 ;;
+    *) echo "usage: rice-showcase [toggle|up|down|shot [path]]" >&2; exit 2 ;;
 esac

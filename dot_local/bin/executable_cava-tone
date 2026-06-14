@@ -1,0 +1,105 @@
+#!/usr/bin/env bash
+#
+# cava-tone — generate a short PipeWire test tone shaped for Cava screenshots.
+#
+# The tone is intentionally weighted like a bell curve across low, mid, and high
+# bands, so Cava shows a tall middle with lower shoulders on both sides.
+set -euo pipefail
+
+usage() {
+    cat >&2 <<'EOF'
+usage: cava-tone [seconds]
+
+Generate and play a short local test tone through PipeWire.
+Default duration: 24 seconds.
+EOF
+}
+
+case "${1:-}" in
+    -h|--help)
+        usage
+        exit 0
+        ;;
+esac
+
+duration="${1:-24}"
+case "$duration" in
+    *[!0-9.]*|"")
+        usage
+        exit 2
+        ;;
+esac
+
+if ! command -v python3 >/dev/null 2>&1; then
+    echo "cava-tone: python3 is not installed" >&2
+    exit 1
+fi
+
+if ! command -v pw-play >/dev/null 2>&1; then
+    echo "cava-tone: pw-play is not installed" >&2
+    exit 1
+fi
+
+tmp="$(mktemp --suffix=.wav)"
+trap 'rm -f "$tmp"' EXIT
+
+python3 - "$tmp" "$duration" <<'PY'
+import math
+import struct
+import sys
+import wave
+
+path = sys.argv[1]
+duration = float(sys.argv[2])
+sample_rate = 48_000
+frames = max(1, int(sample_rate * duration))
+
+# Log-spaced tones with Gaussian weights. The middle is intentionally overdriven
+# so Cava reaches the top colors while the sides stay lower.
+bands = (
+    (55.0, 0.10),
+    (82.0, 0.20),
+    (123.0, 0.42),
+    (185.0, 0.78),
+    (277.0, 1.12),
+    (415.0, 1.45),
+    (622.0, 1.62),
+    (932.0, 1.40),
+    (1397.0, 0.95),
+    (2093.0, 0.52),
+    (3136.0, 0.24),
+    (4704.0, 0.10),
+)
+
+with wave.open(path, "wb") as out:
+    out.setnchannels(2)
+    out.setsampwidth(2)
+    out.setframerate(sample_rate)
+
+    for i in range(frames):
+        t = i / sample_rate
+        pulse = 0.88 + 0.12 * math.sin(2.0 * math.pi * 0.14 * t) ** 2
+        left = 0.0
+        right = 0.0
+
+        for idx, (freq, gain) in enumerate(bands):
+            phase = 2.0 * math.pi * freq * t
+            shimmer = 0.92 + 0.08 * math.sin(2.0 * math.pi * (0.06 + idx * 0.015) * t)
+            pan = 0.5 + 0.5 * math.sin(2.0 * math.pi * (0.025 + idx * 0.01) * t)
+            band_gain = gain * pulse * shimmer
+
+            sample = math.sin(phase) * band_gain
+            left += sample * (1.0 - 0.35 * pan)
+            right += sample * (0.65 + 0.35 * pan)
+
+        fade = min(1.0, i / (sample_rate * 0.4), (frames - i - 1) / (sample_rate * 0.6))
+        amp = 0.72 * max(0.0, fade)
+        drive = 2.8
+        left_limited = math.tanh(left * amp * drive)
+        right_limited = math.tanh(right * amp * drive)
+        left_i = int(left_limited * 32767)
+        right_i = int(right_limited * 32767)
+        out.writeframesraw(struct.pack("<hh", left_i, right_i))
+PY
+
+pw-play "$tmp"

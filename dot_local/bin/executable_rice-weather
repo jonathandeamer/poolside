@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+LOCATION="${RICE_WEATHER_LOCATION:-Los Angeles}"
+CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/rice-weather.json"
+MAX_AGE_SECONDS=900
+URL_LOCATION="${LOCATION// /%20}"
+URL="https://wttr.in/${URL_LOCATION}?format=j1"
+
+need_fetch=1
+if [ -s "$CACHE" ]; then
+    now="$(date +%s)"
+    mtime="$(stat -c %Y "$CACHE" 2>/dev/null || echo 0)"
+    [ $((now - mtime)) -lt "$MAX_AGE_SECONDS" ] && need_fetch=0
+fi
+
+if [ "$need_fetch" -eq 1 ]; then
+    mkdir -p "$(dirname "$CACHE")"
+    tmp="${CACHE}.$$"
+    if curl -fsS --max-time 6 "$URL" > "$tmp"; then
+        mv "$tmp" "$CACHE"
+    else
+        rm -f "$tmp"
+    fi
+fi
+
+if [ ! -s "$CACHE" ]; then
+    printf '\033[38;2;212;106;78m  LOS ANGELES\033[0m\n\n'
+    printf '  weather unavailable\n'
+    printf '  check network\n'
+    exit 0
+fi
+
+json="$(jq -r '
+  .current_condition[0] as $c |
+  .weather[0] as $d |
+  .nearest_area[0] as $a |
+  [
+    ($a.areaName[0].value // "Los Angeles"),
+    ($c.temp_F // "?"),
+    ($c.FeelsLikeF // "?"),
+    ($c.weatherDesc[0].value // "Clear"),
+    ($c.windspeedMiles // "?"),
+    ($c.winddir16Point // ""),
+    ($c.humidity // "?"),
+    ($d.maxtempF // "?"),
+    ($d.mintempF // "?"),
+    ($d.astronomy[0].sunrise // "?"),
+    ($d.astronomy[0].sunset // "?")
+  ] | @tsv
+' "$CACHE")"
+
+IFS=$'\t' read -r area temp feels condition wind wind_dir humidity high low sunrise sunset <<< "$json"
+
+condition_lc="$(printf '%s' "$condition" | tr '[:upper:]' '[:lower:]')"
+icon="󰖙"
+case "$condition_lc" in
+    *sun*|*clear*) icon="󰖙" ;;
+    *cloud*|*overcast*) icon="󰖐" ;;
+    *rain*|*drizzle*|*shower*) icon="󰖗" ;;
+    *storm*|*thunder*) icon="󰖓" ;;
+    *fog*|*mist*|*haze*) icon="󰖑" ;;
+esac
+
+slate='\033[38;2;35;49;58m'
+coral='\033[38;2;212;106;78m'
+pool='\033[38;2;61;117;144m'
+cyan='\033[38;2;45;128;138m'
+ochre='\033[38;2;207;154;36m'
+green='\033[38;2;90;143;102m'
+plum='\033[38;2;143;93;136m'
+muted='\033[38;2;124;142;154m'
+reset='\033[0m'
+
+printf '\033[?25l'
+printf '\033[2J\033[H'
+printf '\n'
+printf "  ${coral}LOS ANGELES${reset}  ${muted}%s${reset}\n" "$area"
+printf "  ${ochre}%s${reset}  ${slate}%s°F${reset}  ${pool}%s${reset}\n" "$icon" "$temp" "$condition"
+printf '\n'
+printf "  ${cyan}feels${reset} ${slate}%s°F${reset}   ${green}hi/lo${reset} ${slate}%s°/%s°${reset}\n" "$feels" "$high" "$low"
+printf "  ${pool}wind${reset}  ${slate}%s mph %s${reset}   ${plum}hum${reset} ${slate}%s%%${reset}\n" "$wind" "$wind_dir" "$humidity"
+printf "  ${ochre}sun${reset}   ${slate}%s -> %s${reset}\n" "$sunrise" "$sunset"

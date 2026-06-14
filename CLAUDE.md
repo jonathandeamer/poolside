@@ -33,6 +33,9 @@ Useful installed rice stack:
 - `ttf-jetbrains-mono-nerd`
 - PipeWire audio packages
 - `btop` (themed system monitor), `eza`, `bat`, `fzf`, `zoxide` (shell tooling)
+- `cava` (audio visualiser), `ncspot` (Spotify TUI) — music/visualiser stack
+- Waybar sound uses the native `wireplumber` module; `pipewire-pulse` is intentionally
+  not installed (no PulseAudio compatibility layer)
 
 ## Operating rules
 
@@ -68,6 +71,8 @@ Useful installed rice stack:
 - `btop` uses a custom theme at `dot_config/btop/themes/poolside.theme`, selected via
   `color_theme` in `dot_config/btop/btop.conf` with `theme_background = False` so it inherits the
   terminal background.
+- `cava` (`dot_config/cava/config`) and `ncspot` (`dot_config/ncspot/config.toml`) carry the same
+  palette. cava captures the default PipeWire sink monitor, so it reacts to any audio playing.
 
 ## Dotfiles workflow
 

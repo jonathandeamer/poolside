@@ -40,10 +40,18 @@ if ! command -v pw-play >/dev/null 2>&1; then
     exit 1
 fi
 
-tmp="$(mktemp --suffix=.wav)"
-trap 'rm -f "$tmp"' EXIT
+cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/cava-tone"
+mkdir -p "$cache_dir"
+cache_file="$cache_dir/tone-${duration}.wav"
 
-python3 - "$tmp" "$duration" <<'PY'
+# Synthesising the WAV is a slow pure-Python loop, which used to delay playback
+# long enough that screenshots caught an empty cava pane. Cache per-duration so
+# only the first run pays the synth cost; later runs play instantly.
+if [ ! -s "$cache_file" ]; then
+    tmp="$(mktemp --suffix=.wav)"
+    trap 'rm -f "$tmp"' EXIT
+
+    python3 - "$tmp" "$duration" <<'PY'
 import math
 import struct
 import sys
@@ -102,4 +110,7 @@ with wave.open(path, "wb") as out:
         out.writeframesraw(struct.pack("<hh", left_i, right_i))
 PY
 
-pw-play "$tmp"
+    mv -f "$tmp" "$cache_file"
+fi
+
+pw-play "$cache_file"

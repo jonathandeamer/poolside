@@ -1,19 +1,32 @@
 /*
- * Poolside GTK3 accents for apps such as Nemo.
- * Keep this broad and reversible: it colors common GTK surfaces without
- * replacing the whole widget theme.
+ * Poolside GTK3 styling for showcase apps such as Nemo.
+ *
+ * This stays in ~/.config/gtk-3.0/gtk.css so it is easy to remove or soften.
+ * It avoids a full theme dependency, but gives GTK3 file-manager chrome enough
+ * color and contrast to sit with the rest of the rice.
  */
 
 @define-color poolside_bg #fcfaf6;
+@define-color poolside_panel #f4eee5;
+@define-color poolside_panel_deep #eadcca;
 @define-color poolside_fg #23313a;
 @define-color poolside_muted #5a6b72;
 @define-color poolside_cream_2 #e3ded6;
 @define-color poolside_terracotta #d46a4e;
+@define-color poolside_terracotta_deep #c96244;
 @define-color poolside_blue #3d7590;
 @define-color poolside_blue_2 #5a9ec2;
 @define-color poolside_green #5a8f66;
+@define-color poolside_green_2 #76a881;
 @define-color poolside_ochre #cf9a24;
+@define-color poolside_yellow #f6cb4f;
 @define-color poolside_plum #8f5d88;
+
+* {
+    -gtk-icon-style: symbolic;
+    -gtk-outline-radius: 4px;
+    outline-color: alpha(@poolside_blue, 0.42);
+}
 
 window,
 dialog,
@@ -35,35 +48,84 @@ stack {
 headerbar,
 toolbar,
 .primary-toolbar {
-    background: @poolside_bg;
+    background-image: linear-gradient(to bottom, #fffdf9, @poolside_panel);
     color: @poolside_fg;
-    border-color: @poolside_cream_2;
-    box-shadow: none;
+    border-color: alpha(@poolside_terracotta, 0.28);
+    box-shadow: inset 0 -2px alpha(@poolside_blue, 0.16);
+    min-height: 38px;
+    padding: 5px 8px;
+}
+
+headerbar title,
+headerbar .title {
+    color: @poolside_fg;
+    font-weight: 700;
+}
+
+headerbar subtitle,
+headerbar .subtitle {
+    color: @poolside_muted;
 }
 
 headerbar button,
 toolbar button,
 button {
-    background: alpha(@poolside_blue_2, 0.12);
+    background-image: linear-gradient(to bottom, alpha(@poolside_blue_2, 0.18), alpha(@poolside_blue, 0.10));
     color: @poolside_fg;
-    border-color: alpha(@poolside_blue, 0.24);
+    border: 1px solid alpha(@poolside_blue, 0.28);
     border-radius: 4px;
+    box-shadow: none;
+    min-height: 26px;
+    min-width: 26px;
+    padding: 3px 7px;
 }
 
-button:hover,
-button:checked {
-    background: alpha(@poolside_terracotta, 0.18);
-    border-color: alpha(@poolside_terracotta, 0.42);
+button:hover {
+    background-image: linear-gradient(to bottom, alpha(@poolside_yellow, 0.42), alpha(@poolside_ochre, 0.20));
+    border-color: alpha(@poolside_ochre, 0.55);
+}
+
+button:checked,
+button:active {
+    background-image: none;
+    background-color: @poolside_terracotta;
+    border-color: @poolside_terracotta_deep;
+    color: @poolside_bg;
 }
 
 entry,
 searchbar,
 combobox,
 spinbutton {
-    background: #fffdf9;
+    background-color: #fffdf9;
     color: @poolside_fg;
-    border-color: alpha(@poolside_blue, 0.28);
+    border: 1px solid alpha(@poolside_blue, 0.32);
     border-radius: 4px;
+    box-shadow: inset 0 0 0 1px alpha(@poolside_bg, 0.72);
+    min-height: 28px;
+}
+
+entry:focus,
+searchbar entry:focus {
+    border-color: @poolside_terracotta;
+    box-shadow: inset 0 0 0 1px alpha(@poolside_terracotta, 0.22);
+}
+
+pathbar button,
+.path-bar button,
+linked button,
+.linked button {
+    background-image: none;
+    background-color: alpha(@poolside_green_2, 0.16);
+    border-color: alpha(@poolside_green, 0.26);
+}
+
+pathbar button:hover,
+.path-bar button:hover,
+linked button:hover,
+.linked button:hover {
+    background-color: alpha(@poolside_green_2, 0.28);
+    border-color: alpha(@poolside_green, 0.44);
 }
 
 treeview,
@@ -76,10 +138,13 @@ flowbox,
 }
 
 treeview:selected,
+treeview:selected:focus,
 iconview:selected,
+iconview:selected:focus,
 list row:selected,
 flowboxchild:selected,
-.view:selected {
+.view:selected,
+.view:selected:focus {
     background-color: @poolside_blue;
     color: @poolside_bg;
 }
@@ -87,24 +152,66 @@ flowboxchild:selected,
 treeview:hover,
 iconview:hover,
 list row:hover,
-flowboxchild:hover {
-    background-color: alpha(@poolside_ochre, 0.14);
+flowboxchild:hover,
+.view:hover {
+    background-color: alpha(@poolside_yellow, 0.20);
 }
 
 placessidebar,
 placessidebar list,
-placessidebar row,
 .sidebar,
-.sidebar list,
-.sidebar row {
-    background-color: #f4eee5;
+.sidebar list {
+    background-image: linear-gradient(to bottom, @poolside_panel, @poolside_panel_deep);
     color: @poolside_fg;
+    border-right: 1px solid alpha(@poolside_terracotta, 0.28);
+}
+
+placessidebar row,
+.sidebar row {
+    color: @poolside_fg;
+    border-radius: 4px;
+    margin: 2px 6px;
+    min-height: 28px;
+    padding: 2px 7px;
+}
+
+placessidebar row:hover,
+.sidebar row:hover {
+    background-color: alpha(@poolside_yellow, 0.24);
 }
 
 placessidebar row:selected,
 .sidebar row:selected {
-    background-color: @poolside_terracotta;
+    background-image: linear-gradient(to right, @poolside_terracotta, @poolside_plum);
     color: @poolside_bg;
+}
+
+placessidebar row:selected image,
+placessidebar row:selected label,
+.sidebar row:selected image,
+.sidebar row:selected label {
+    color: @poolside_bg;
+}
+
+statusbar,
+.statusbar {
+    background-color: @poolside_panel;
+    color: @poolside_muted;
+    border-top: 1px solid alpha(@poolside_blue, 0.16);
+}
+
+menu,
+menuitem,
+popover {
+    background-color: #fffdf9;
+    color: @poolside_fg;
+}
+
+menuitem:hover,
+menuitem:selected,
+popover modelbutton:hover {
+    background-color: alpha(@poolside_terracotta, 0.18);
+    color: @poolside_fg;
 }
 
 rubberband,
@@ -115,10 +222,21 @@ rubberband,
 
 progressbar progress,
 scale highlight {
-    background-color: @poolside_green;
+    background-image: linear-gradient(to right, @poolside_green, @poolside_blue_2);
+}
+
+scrollbar {
+    background-color: alpha(@poolside_panel_deep, 0.45);
 }
 
 scrollbar slider {
-    background-color: alpha(@poolside_plum, 0.55);
+    background-color: alpha(@poolside_plum, 0.68);
+    border: 2px solid alpha(@poolside_bg, 0.88);
     border-radius: 4px;
+    min-width: 8px;
+    min-height: 8px;
+}
+
+scrollbar slider:hover {
+    background-color: @poolside_terracotta;
 }

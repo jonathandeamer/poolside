@@ -1,0 +1,18 @@
+format = "$directory$character"
+add_newline = false
+
+[directory]
+style = "bold fg:#3d7590"
+truncation_length = 100
+truncate_to_repo = false
+format = "[$path]($style) "
+
+[git_branch]
+disabled = true
+
+[git_status]
+disabled = true
+
+[character]
+success_symbol = "[❯](fg:#5a8f66)"
+error_symbol = "[❯](fg:#c96244)"

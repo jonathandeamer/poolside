@@ -4,6 +4,12 @@ set -eu
 repo_root=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
 cd "$repo_root"
 
+if ! command -v rg >/dev/null 2>&1; then
+  echo "secret-scan: ripgrep (rg) not found; cannot run the pattern scan" >&2
+  echo "secret-scan: install ripgrep, e.g. 'sudo pacman -S ripgrep'" >&2
+  exit 1
+fi
+
 if command -v gitleaks >/dev/null 2>&1; then
   gitleaks detect --source . --no-git --redact
 fi

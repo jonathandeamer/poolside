@@ -10,8 +10,7 @@ set -euo pipefail
 # --- minimal chrome: drop menubar + statusbar, keep path bar + sidebar ---
 gsettings set org.nemo.window-state start-with-menu-bar false
 gsettings set org.nemo.window-state start-with-status-bar false
-gsettings set org.nemo.window-state start-with-sidebar true
-gsettings set org.nemo.window-state sidebar-width 180
+gsettings set org.nemo.window-state start-with-sidebar false
 gsettings set org.nemo.preferences show-location-entry false      # breadcrumb path
 
 # --- clean view for a screenshot ---

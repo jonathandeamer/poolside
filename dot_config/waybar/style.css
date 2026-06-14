@@ -85,7 +85,7 @@ window#waybar.empty #window {
 }
 
 /* Revealed control items share one flat pool-blue panel. */
-#group-control #pulseaudio,
+#group-control #wireplumber,
 #group-control #network {
   margin: 4px 2px 3px;
   padding: 0 10px;
@@ -106,7 +106,7 @@ window#waybar.empty #window {
   border: 1px solid rgba(80, 108, 129, 0.18);
 }
 
-#pulseaudio.muted,
+#wireplumber.muted,
 #network.disconnected {
   opacity: 0.6;
 }

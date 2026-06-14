@@ -17,7 +17,7 @@
       "transition-left-to-right": false,
       "click-to-reveal": false
     },
-    "modules": ["custom/control", "pulseaudio", "network"]
+    "modules": ["custom/control", "wireplumber", "network"]
   },
 
   "custom/control": {
@@ -52,11 +52,12 @@
     }
   },
 
-  "pulseaudio": {
+  "wireplumber": {
     "format": "󰕾 {volume}%",
     "format-muted": "󰝟 muted",
     "scroll-step": 5,
     "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+    "max-volume": 150,
     "tooltip": false
   },
 

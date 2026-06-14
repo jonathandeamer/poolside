@@ -68,20 +68,42 @@ window#waybar.empty #window {
   opacity: 0;
 }
 
-#pulseaudio {
+/* Control center: a sliders glyph that reveals sound + wifi on hover. */
+#custom-control {
+  margin: 4px 4px 3px;
+  padding: 0 11px;
+  background: rgba(221, 236, 244, 0.72);
+  border: 1px solid rgba(80, 108, 129, 0.18);
+  color: #3d7590;
+  font-size: 15px;
+}
+
+#custom-control:hover {
+  background: rgba(201, 98, 68, 0.95);
+  color: #f8f1e6;
+  border-color: rgba(201, 98, 68, 0.25);
+}
+
+/* Revealed control items share one flat pool-blue panel. */
+#group-control #pulseaudio,
+#group-control #network {
   margin: 4px 2px 3px;
-  padding: 0 6px;
-  background: transparent;
-  border: none;
+  padding: 0 10px;
+  background: rgba(221, 236, 244, 0.72);
+  border: 1px solid rgba(80, 108, 129, 0.18);
+  color: #23313a;
   min-width: 0;
 }
 
-#network {
-  background: rgba(220, 232, 221, 0.78);
+#group-control #network {
+  margin-right: 4px;
 }
 
 #tray {
-  padding-right: 12px;
+  margin: 4px 4px 3px;
+  padding: 0 12px 0 10px;
+  background: rgba(221, 236, 244, 0.72);
+  border: 1px solid rgba(80, 108, 129, 0.18);
 }
 
 #pulseaudio.muted,

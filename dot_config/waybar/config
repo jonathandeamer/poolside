@@ -8,7 +8,22 @@
   "margin-right": 8,
   "modules-left": ["hyprland/workspaces", "hyprland/window"],
   "modules-center": ["clock"],
-  "modules-right": ["pulseaudio", "network", "tray"],
+  "modules-right": ["group/control", "tray"],
+
+  "group/control": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 350,
+      "transition-left-to-right": false,
+      "click-to-reveal": false
+    },
+    "modules": ["custom/control", "pulseaudio", "network"]
+  },
+
+  "custom/control": {
+    "format": "󰒓",
+    "tooltip": false
+  },
 
   "hyprland/workspaces": {
     "disable-scroll": true,
@@ -38,9 +53,11 @@
   },
 
   "pulseaudio": {
-    "format": "vol {volume}%",
-    "format-muted": "muted",
-    "scroll-step": 5
+    "format": "󰕾 {volume}%",
+    "format-muted": "󰝟 muted",
+    "scroll-step": 5,
+    "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+    "tooltip": false
   },
 
   "network": {

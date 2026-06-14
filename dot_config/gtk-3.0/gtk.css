@@ -1,0 +1,124 @@
+/*
+ * Poolside GTK3 accents for apps such as Nemo.
+ * Keep this broad and reversible: it colors common GTK surfaces without
+ * replacing the whole widget theme.
+ */
+
+@define-color poolside_bg #fcfaf6;
+@define-color poolside_fg #23313a;
+@define-color poolside_muted #5a6b72;
+@define-color poolside_cream_2 #e3ded6;
+@define-color poolside_terracotta #d46a4e;
+@define-color poolside_blue #3d7590;
+@define-color poolside_blue_2 #5a9ec2;
+@define-color poolside_green #5a8f66;
+@define-color poolside_ochre #cf9a24;
+@define-color poolside_plum #8f5d88;
+
+window,
+dialog,
+popover,
+menu {
+    background-color: @poolside_bg;
+    color: @poolside_fg;
+}
+
+.background,
+viewport,
+scrolledwindow,
+paned,
+stack {
+    background-color: @poolside_bg;
+    color: @poolside_fg;
+}
+
+headerbar,
+toolbar,
+.primary-toolbar {
+    background: @poolside_bg;
+    color: @poolside_fg;
+    border-color: @poolside_cream_2;
+    box-shadow: none;
+}
+
+headerbar button,
+toolbar button,
+button {
+    background: alpha(@poolside_blue_2, 0.12);
+    color: @poolside_fg;
+    border-color: alpha(@poolside_blue, 0.24);
+    border-radius: 4px;
+}
+
+button:hover,
+button:checked {
+    background: alpha(@poolside_terracotta, 0.18);
+    border-color: alpha(@poolside_terracotta, 0.42);
+}
+
+entry,
+searchbar,
+combobox,
+spinbutton {
+    background: #fffdf9;
+    color: @poolside_fg;
+    border-color: alpha(@poolside_blue, 0.28);
+    border-radius: 4px;
+}
+
+treeview,
+iconview,
+list,
+flowbox,
+.view {
+    background-color: @poolside_bg;
+    color: @poolside_fg;
+}
+
+treeview:selected,
+iconview:selected,
+list row:selected,
+flowboxchild:selected,
+.view:selected {
+    background-color: @poolside_blue;
+    color: @poolside_bg;
+}
+
+treeview:hover,
+iconview:hover,
+list row:hover,
+flowboxchild:hover {
+    background-color: alpha(@poolside_ochre, 0.14);
+}
+
+placessidebar,
+placessidebar list,
+placessidebar row,
+.sidebar,
+.sidebar list,
+.sidebar row {
+    background-color: #f4eee5;
+    color: @poolside_fg;
+}
+
+placessidebar row:selected,
+.sidebar row:selected {
+    background-color: @poolside_terracotta;
+    color: @poolside_bg;
+}
+
+rubberband,
+.rubberband {
+    background-color: alpha(@poolside_blue_2, 0.24);
+    border-color: @poolside_blue;
+}
+
+progressbar progress,
+scale highlight {
+    background-color: @poolside_green;
+}
+
+scrollbar slider {
+    background-color: alpha(@poolside_plum, 0.55);
+    border-radius: 4px;
+}

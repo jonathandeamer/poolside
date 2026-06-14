@@ -5,12 +5,12 @@
 # in hyprland.conf, keyed on the kitty --class names below, so the scene is identical
 # every time. Toggle with Alt+Shift+S.
 #
-# Panes: rice_fetch (fastfetch), rice_btop (btop), rice_cava (cava if installed,
-# otherwise a colourful eza listing as a placeholder).
+# Panes: rice_fetch (fastfetch), rice_files (Nemo if installed), rice_btop (btop),
+# rice_cava (cava if installed, otherwise a colourful eza listing as a placeholder).
 #
 set -euo pipefail
 
-CLASSES=(rice_fetch rice_btop rice_cava)
+CLASSES=(rice_fetch rice_files rice_btop rice_cava)
 KENV=(env LIBGL_ALWAYS_SOFTWARE=1 kitty)
 # Empty workspace to stage the scene on, so only the wallpaper + the floating
 # composition show. Override with RICE_SHOWCASE_WS. Persistent workspaces are 1-3.
@@ -44,6 +44,10 @@ summon() {
     hyprctl dispatch workspace "$SHOW_WS" >/dev/null 2>&1 || true
 
     "${KENV[@]}" --hold --class rice_fetch fastfetch &
+
+    if command -v nemo >/dev/null 2>&1; then
+        nemo --no-desktop --class=rice_files "$HOME/rice" &
+    fi
 
     "${KENV[@]}" --class rice_btop btop &
 

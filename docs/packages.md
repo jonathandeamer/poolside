@@ -9,6 +9,7 @@ system state.
 - `kitty`
 - `waybar`
 - `wofi`
+- `nemo`
 - `mako`
 - `hyprpaper`
 - `grim`

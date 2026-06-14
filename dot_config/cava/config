@@ -24,16 +24,18 @@ method = ncurses
 channels = stereo
 mono_option = average
 
-; Bottom-to-top gradient: pool blue rising to a terracotta "splash" at the peaks.
+; Bottom-to-top gradient: brief pool blue base, longer sunlit middle, terracotta peaks.
 [color]
 gradient = 1
-gradient_count = 6
+gradient_count = 8
 gradient_color_1 = '#3d7590'
-gradient_color_2 = '#5a9ec2'
-gradient_color_3 = '#54b5c2'
-gradient_color_4 = '#cf9a24'
-gradient_color_5 = '#d46a4e'
-gradient_color_6 = '#c25438'
+gradient_color_2 = '#2d808a'
+gradient_color_3 = '#5a8f66'
+gradient_color_4 = '#76a881'
+gradient_color_5 = '#cf9a24'
+gradient_color_6 = '#f6cb4f'
+gradient_color_7 = '#d46a4e'
+gradient_color_8 = '#c25438'
 
 [smoothing]
 noise_reduction = 0.45

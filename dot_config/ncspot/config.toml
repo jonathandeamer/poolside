@@ -1,0 +1,29 @@
+# ncspot — poolside (A Bigger Splash) theme.
+#
+# First run: launch `ncspot` and log in with your Spotify account (Premium is
+# required for playback). Audio plays through the default PipeWire sink, so cava
+# picks it up automatically — run cava alongside ncspot for the full effect.
+#
+# If you get no sound, set an explicit audio backend, e.g. `backend = "rodio"`.
+
+notify = true
+gapless = true
+
+[theme]
+background = "#fcfaf6"
+primary = "#23313a"
+secondary = "#6b7d88"
+title = "#c25438"
+playing = "#c25438"
+playing_selected = "#b04a30"
+playing_bg = "#fcfaf6"
+highlight = "#23313a"
+highlight_bg = "#ddecf4"
+error = "#fcfaf6"
+error_bg = "#c25438"
+statusbar = "#fcfaf6"
+statusbar_progress = "#c25438"
+statusbar_bg = "#3d7590"
+cmdline = "#23313a"
+cmdline_bg = "#fcfaf6"
+search_match = "#cf9a24"

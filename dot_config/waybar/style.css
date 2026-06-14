@@ -1,6 +1,6 @@
 * {
   border: none;
-  border-radius: 8px;
+  border-radius: 4px;
   min-height: 0;
   font-family: "Inter", "JetBrainsMono Nerd Font", sans-serif;
   font-size: 13px;
@@ -24,6 +24,7 @@ window#waybar {
   padding: 0 10px;
   background: rgba(245, 240, 232, 0.78);
   border: 1px solid rgba(201, 98, 68, 0.2);
+  box-shadow: 2px 2px 0 rgba(35, 49, 58, 0.18);
 }
 
 #workspaces {
@@ -88,6 +89,7 @@ window#waybar.empty #window {
   border: 1px solid rgba(201, 98, 68, 0.2);
   color: #3d7590;
   font-size: 15px;
+  box-shadow: 2px 2px 0 rgba(35, 49, 58, 0.18);
 }
 
 #custom-control:hover {
@@ -105,6 +107,7 @@ window#waybar.empty #window {
   border: 1px solid rgba(201, 98, 68, 0.2);
   color: #23313a;
   min-width: 0;
+  box-shadow: 2px 2px 0 rgba(35, 49, 58, 0.18);
 }
 
 #group-control #network {

@@ -37,6 +37,24 @@ launch_pane() {
     setsid -f "${KENV[@]}" "$@" >/dev/null 2>&1
 }
 
+# cava's `source = auto` does not track this machine's default-sink monitor while
+# it is suspended (an idle desktop), so the showcase pane reads silence or the
+# audio thread exits ("audio thread exited unexpectedly"). Resolve the real
+# monitor at runtime and override just the [input] source, keeping the user's
+# poolside colors/gradient. The committed cava config stays portable (`auto`);
+# only this screenshot path forces an explicit source. Echoes a temp config path
+# on success, or nothing if it can't resolve one (caller falls back to plain cava).
+cava_showcase_config() {
+    local real="$HOME/.config/cava/config" mon out
+    command -v pactl >/dev/null 2>&1 || return 0
+    [ -r "$real" ] || return 0
+    mon="$(pactl get-default-sink 2>/dev/null)"
+    [ -n "$mon" ] || return 0
+    out="${XDG_RUNTIME_DIR:-/tmp}/rice-showcase-cava.conf"
+    sed "s|^source = .*|source = ${mon}.monitor|" "$real" > "$out" || return 0
+    echo "$out"
+}
+
 dismiss() {
     # Close every showcase window by address (closing by shared class can resolve
     # repeated dispatches to the same window, stranding others).
@@ -65,7 +83,12 @@ summon() {
     # Scene A — system
     launch_pane --class rice_fetch --title fastfetch bash -lc 'fastfetch; tail -f /dev/null'
     if command -v cava >/dev/null 2>&1; then
-        launch_pane --class rice_cava --title cava bash -lc 'cava || true; tail -f /dev/null'
+        cava_cfg="$(cava_showcase_config)"
+        if [ -n "$cava_cfg" ]; then
+            launch_pane --class rice_cava --title cava bash -lc "cava -p '$cava_cfg' || true; tail -f /dev/null"
+        else
+            launch_pane --class rice_cava --title cava bash -lc 'cava || true; tail -f /dev/null'
+        fi
     else
         launch_pane --hold --class rice_cava \
             bash -lc 'eza -la --icons --git ~/rice 2>/dev/null; echo; echo "  (install cava for an audio visualiser in this pane)"'
